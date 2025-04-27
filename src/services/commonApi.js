@@ -4,17 +4,18 @@ import BASE_URL from './base_url';
 // Create an Axios instance with the base URL
 const api = axios.create({
     baseURL: BASE_URL,
-    headers: {
-        'Content-Type': 'application/json',
-    },
 });
 
-
-api.interceptors.request.use(//Interceptors are a feature of axios, allow us to intercept and modify HTTP requests 
+// Interceptor to add token and handle headers
+api.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('token');
         if (token) {
-            config.headers.Authorization = `Bearer ${token}`;/* bearer insterted here firstly by help of interseptor (adds heaader bearer)*/
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        // Only set Content-Type to JSON if data is not FormData
+        if (!(config.data instanceof FormData)) {
+            config.headers['Content-Type'] = 'application/json';
         }
         return config;
     },
@@ -34,9 +35,9 @@ export const getRequest = async (url) => {
     }
 };
 
-export const postRequest = async (url, data) => {
+export const postRequest = async (url, data, headers = {}) => {
     try {
-        const response = await api.post(url, data);
+        const response = await api.post(url, data, { headers });
         return response.data;
     } catch (error) {
         console.error('POST Request Error:', error);

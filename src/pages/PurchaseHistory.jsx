@@ -63,7 +63,7 @@ function PurchaseHistory() {
                                             <Card.Title>Username: {purchase.username}</Card.Title>
                                             <Card.Text>Email: {purchase.email || 'N/A'}</Card.Text> {/* Add email */}
                                             <Card.Text>Game: {purchase.gameTitle}</Card.Text>
-                                            <Card.Text>Amount: ${purchase.gameAmount.toFixed(2)}</Card.Text>
+                                            <Card.Text>Amount: ₹{purchase.gameAmount.toFixed(2)}</Card.Text> {/* Changed $ to ₹ */}
                                             <Card.Text>
                                                 Time: {isValidDate ? purchaseDate.toLocaleString() : 'N/A'}
                                             </Card.Text>

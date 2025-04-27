@@ -4,16 +4,25 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import PaymentModal from '../components/PaymentModal';
-import { getPaidGames, payForGame } from '../services/allApi';
+import { getPaidGames, payForGame, getUserProfile } from '../services/allApi';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
 
 function Dashboard() {
     const { games, fetchGames } = useContext(GameContext);
     const [paidGames, setPaidGames] = useState([]);
     const [showPayment, setShowPayment] = useState(null);
-    const [trialGames, setTrialGames] = useState({}); // Track trial status per game
-    const timerRefs = useRef({}); // Use ref to store timer IDs
+    const [trialGames, setTrialGames] = useState({});
+    const [profileImage, setProfileImage] = useState('https://static.vecteezy.com/system/resources/previews/023/465/688/non_2x/contact-dark-mode-glyph-ui-icon-address-book-profile-page-user-interface-design-white-silhouette-symbol-on-black-space-solid-pictogram-for-web-mobile-isolated-illustration-vector.jpg');
+    const timerRefs = useRef({});
+    const navigate = useNavigate();
+    const toastShownRef = useRef(false);
+
+    // Fallback for image loading errors
+    const handleImageError = (e) => {
+        e.target.src = 'https://static.vecteezy.com/system/resources/previews/023/465/688/non_2x/contact-dark-mode-glyph-ui-icon-address-book-profile-page-user-interface-design-white-silhouette-symbol-on-black-space-solid-pictogram-for-web-mobile-isolated-illustration-vector.jpg';
+    };
 
     useEffect(() => {
         const fetchPaidGamesData = async () => {
@@ -22,12 +31,34 @@ function Dashboard() {
                 setPaidGames(data.map(game => game._id));
             } catch (error) {
                 console.error('Fetch paid games error:', error);
-                if (error.response?.status !== 401) {
+                if (error.response?.status !== 401 && !toastShownRef.current) {
                     toast.error('Failed to load paid games.');
+                    toastShownRef.current = true;
                 }
             }
         };
+
+        const fetchUserProfile = async () => {
+            try {
+                const data = await getUserProfile();
+                const serverUrl = process.env.NODE_ENV === 'production'
+                    ? 'https://game-zoneserver.onrender.com'
+                    : 'http://localhost:3000';
+                const imageUrl = data.profileImage
+                    ? `${serverUrl}${data.profileImage}`
+                    : 'https://static.vecteezy.com/system/resources/previews/023/465/688/non_2x/contact-dark-mode-glyph-ui-icon-address-book-profile-page-user-interface-design-white-silhouette-symbol-on-black-space-solid-pictogram-for-web-mobile-isolated-illustration-vector.jpg';
+                setProfileImage(imageUrl);
+            } catch (error) {
+                console.error('Fetch profile error:', error);
+                if (!toastShownRef.current) {
+                    toast.error('Failed to load profile.');
+                    toastShownRef.current = true;
+                }
+            }
+        };
+
         fetchPaidGamesData();
+        fetchUserProfile();
         fetchGames();
     }, [fetchGames]);
 
@@ -36,8 +67,8 @@ function Dashboard() {
 
         const game = games.find(g => g._id === gameId);
         if (game) {
-            const newWindow = window.open(game.link, '_blank');//Opens game link in a new window/tab=>if ('_self'),opens in self tab
-            setTrialGames(prev => ({ ...prev, [gameId]: true }));// Marks game as in trial
+            const newWindow = window.open(game.link, '_blank');
+            setTrialGames(prev => ({ ...prev, [gameId]: true }));
 
             const timerId = setTimeout(() => {
                 setTrialGames(prev => {
@@ -45,9 +76,9 @@ function Dashboard() {
                     delete newTrialGames[gameId];
                     return newTrialGames;
                 });
-                if (newWindow) newWindow.close(); // Attempt to close trial window
-                setShowPayment(gameId); // Open payment modal after trial
-            }, 60000); // 1-minute trial
+                if (newWindow) newWindow.close();
+                setShowPayment(gameId);
+            }, 60000);
 
             timerRefs.current[gameId] = timerId;
         }
@@ -82,7 +113,7 @@ function Dashboard() {
                 delete newTrialGames[gameId];
                 return newTrialGames;
             });
-            clearTimeout(timerRefs.current[gameId]); // Clear trial timer on payment
+            clearTimeout(timerRefs.current[gameId]);
             delete timerRefs.current[gameId];
             toast.success('Paid successfully!');
             fetchGames();
@@ -96,7 +127,22 @@ function Dashboard() {
         <div style={{ backgroundColor: '#121212', color: 'white', minHeight: '130vh' }}>
             <Header />
             <Container className="py-4">
-                <h2 className="text-center mb-4">Games</h2>
+                <div className="text-center mb-4">
+                    <img
+                        src={profileImage}
+                        alt="Profile"
+                        style={{
+                            width: '100px',
+                            height: '100px',
+                            borderRadius: '50%',
+                            objectFit: 'cover',
+                            cursor: 'pointer',
+                            border: '2px solid #fff'
+                        }}
+                        onError={handleImageError}
+                        onClick={() => navigate('/profile')}
+                    />
+                </div>
                 <Row className="g-4 justify-content-center">
                     {games.map((game) => (
                         <Col key={game._id} xs={12} sm={6} md={4} lg={3} className="d-flex justify-content-center">
@@ -104,11 +150,11 @@ function Dashboard() {
                                 <Card.Img variant="top" src={game.image} style={{ height: '180px', objectFit: 'cover' }} />
                                 <Card.Body className="text-center">
                                     <Card.Title>{game.title}</Card.Title>
-                                    <p>Price: ${game.price.toFixed(2)}</p>{/* //eg:9.99 */}
+                                    <p>Price: ₹{game.price.toFixed(2)}</p>
                                     <Button
                                         variant="primary"
                                         onClick={() => handleLetsGo(game._id)}
-                                        disabled={showPayment === game._id} // Only disable during payment modal
+                                        disabled={showPayment === game._id}
                                     >
                                         Let's Go
                                     </Button>

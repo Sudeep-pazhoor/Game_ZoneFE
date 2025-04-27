@@ -7,6 +7,7 @@ import Auth from './pages/Auth';
 import AdminDashboard from './pages/AdminDashboard';
 import About from './pages/About';
 import PurchaseHistory from './pages/PurchaseHistory';
+import Profile from './pages/Profile';
 
 const PrivateRoute = ({ children }) => {
     const token = localStorage.getItem('token');
@@ -24,6 +25,7 @@ function App() {
                     <Route path="/admin" element={<PrivateRoute><AdminDashboard /></PrivateRoute>} />
                     <Route path="/about" element={<PrivateRoute><About /></PrivateRoute>} />
                     <Route path="/purchase-history" element={<PrivateRoute><PurchaseHistory /></PrivateRoute>} />
+                    <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
                 </Routes>
             </GameProvider>
         </Router>

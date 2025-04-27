@@ -97,10 +97,14 @@ function AdminDashboard() {
                                 <Card.Img variant="top" src={game.image} style={{ height: '180px', objectFit: 'cover' }} />
                                 <Card.Body className="text-center">
                                     <Card.Title>{game.title}</Card.Title>
-                                    <p>Price: ${game.price.toFixed(2)}</p>
+                                    <p>Price: ₹{game.price.toFixed(2)}</p> {/* Changed $ to ₹ */}
                                     <div className="d-flex justify-content-between">
-                                        <Button variant="outline-warning" onClick={() => openEditModal(game)}><i className="fa-solid fa-pen"></i></Button>
-                                        <Button variant="outline-danger" onClick={() => handleDelete(game._id)}><i className="fa-solid fa-trash"></i></Button>
+                                        <Button variant="outline-warning" onClick={() => openEditModal(game)}>
+                                            <i className="fa-solid fa-pen"></i>
+                                        </Button>
+                                        <Button variant="outline-danger" onClick={() => handleDelete(game._id)}>
+                                            <i className="fa-solid fa-trash"></i>
+                                        </Button>
                                     </div>
                                 </Card.Body>
                             </Card>
@@ -110,7 +114,7 @@ function AdminDashboard() {
             </Container>
             <Footer />
 
-            {/* Game Modal */}
+            {/* Add Game Modal */}
             <Modal show={showAddModal} onHide={() => setShowAddModal(false)}>
                 <Modal.Header closeButton><Modal.Title>Add New Game</Modal.Title></Modal.Header>
                 <Modal.Body>
@@ -128,7 +132,7 @@ function AdminDashboard() {
                             <Form.Control type="text" value={newImage} onChange={(e) => setNewImage(e.target.value)} placeholder="Enter image URL" />
                         </Form.Group>
                         <Form.Group className="mb-3">
-                            <Form.Label>Price ($)</Form.Label>
+                            <Form.Label>Price (₹)</Form.Label> 
                             <Form.Control type="number" step="0.01" value={newPrice} onChange={(e) => setNewPrice(e.target.value)} placeholder="Enter price (default: 5)" />
                         </Form.Group>
                     </Form>
@@ -157,7 +161,7 @@ function AdminDashboard() {
                             <Form.Control type="text" value={editImage} onChange={(e) => setEditImage(e.target.value)} placeholder="Enter image URL" />
                         </Form.Group>
                         <Form.Group className="mb-3">
-                            <Form.Label>Price ($)</Form.Label>
+                            <Form.Label>Price (₹)</Form.Label> 
                             <Form.Control type="number" step="0.01" value={editPrice} onChange={(e) => setEditPrice(e.target.value)} placeholder="Enter price (default: 5)" />
                         </Form.Group>
                     </Form>

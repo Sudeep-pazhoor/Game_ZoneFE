@@ -24,7 +24,11 @@ function About() {
     return (
         <div
             style={{
-                position: 'relative',minHeight: '100vh',backgroundColor: '#121212',color: 'white',overflow: 'hidden',
+                position: 'relative',
+                minHeight: '100vh',
+                backgroundColor: '#121212',
+                color: 'white',
+                overflow: 'hidden',
             }}
         >
             <video
@@ -32,7 +36,14 @@ function About() {
                 loop
                 muted
                 style={{
-                    position: 'absolute',top: 0,left: 0,width: '100%',height: '100%',objectFit: 'cover',zIndex: 0,opacity: 0.3,
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    zIndex: 0,
+                    opacity: 0.3,
                 }}
             >
                 <source src="https://cdn.pixabay.com/video/2021/04/28/72488-543388303_large.mp4" type="video/mp4" />
@@ -41,7 +52,11 @@ function About() {
 
             <div
                 style={{
-                    position: 'absolute',width: '100%',height: '100%',backgroundColor: 'rgba(0, 0, 0, 0.6)',zIndex: 1,
+                    position: 'absolute',
+                    width: '100%',
+                    height: '100%',
+                    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                    zIndex: 1,
                 }}
             ></div>
 
@@ -49,10 +64,10 @@ function About() {
                 <Container className="py-5 flex-grow-1">
                     <div className="text-center mb-5">
                         <h1 className="display-4 fw-bold">
-                            Welcome {username} to <span className="text-warning">GameZone</span>
+                            Welcome <span className="text-warning"> {username} </span> to GameZone
                         </h1>
-                        <p className="lead text-muted">
-                            Your ultimate destination for thrilling gaming experiences!
+                        <p className="lead text-primary">
+                            Your ultimate destination for thrilling gaming experiences !
                         </p>
                     </div>
 
@@ -71,7 +86,12 @@ function About() {
                         <Col md={6} lg={4}>
                             <Card
                                 style={{
-                                    backgroundColor: '#1e1e1e',color: 'white',border: 'none',boxShadow: '0 4px 15px rgba(0, 0, 0, 0.3)',transition: 'transform 0.3s',cursor: 'pointer',
+                                    backgroundColor: '#1e1e1e',
+                                    color: 'white',
+                                    border: 'none',
+                                    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.3)',
+                                    transition: 'transform 0.3s',
+                                    cursor: 'pointer',
                                 }}
                                 onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.05)')}
                                 onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
@@ -88,8 +108,10 @@ function About() {
                                     <Button
                                         variant="outline-warning"
                                         style={{
-                                            borderRadius: '20px',padding: '8px 20px',
-                                        }}>
+                                            borderRadius: '20px',
+                                            padding: '8px 20px',
+                                        }}
+                                    >
                                         Go to Dashboard
                                     </Button>
                                 </Card.Body>
@@ -98,6 +120,36 @@ function About() {
                     </Row>
                 </Container>
             </div>
+
+            {/* WhatsApp Icon */}
+            <a
+                href="https://wa.me/8281829839" 
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                    position: 'fixed',
+                    bottom: '20px',
+                    right: '20px',
+                    zIndex: 3,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '50px',
+                    height: '50px',
+                    backgroundColor: '#25D366', 
+                    borderRadius: '50%',
+                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+                    transition: 'transform 0.3s',
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.1)')}
+                onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+            >
+                <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" 
+                    alt="WhatsApp logo"
+                    style={{ width: '40px', height: '40px' }}
+                />
+            </a>
         </div>
     );
 }
